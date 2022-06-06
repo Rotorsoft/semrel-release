@@ -25,9 +25,6 @@ inputs:
   directory:
     description: "The path to the package.json in the mono-repo (e.g. libs/eventually)"
     required: true
-  git-url:
-    description: "The url to the git repo"
-    required: true
   tag:
     description: "Version tag formatted as <package>-v<semver>"
     required: true
@@ -45,6 +42,7 @@ runs:
       shell: bash
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITURL: "${{ github.server_url }}/${{ github.repository }}"
         NPM_REGISTRY: ${{ inputs.npm-registry }}
         NPM_TOKEN: ${{ inputs.npm-token }}
         NPM_ACCESS: ${{ inputs.npm-access }}
@@ -52,7 +50,6 @@ runs:
         EMAIL: ${{ inputs.email }}
         PACKAGE: ${{ inputs.package }}
         DIRECTORY: ${{ inputs.directory }}
-        GITURL: ${{ inputs.git-url }}
         TAG: ${{ inputs.tag }}
         VERSION: ${{ inputs.version }}
         CHANGE_LOG: ${{ inputs.change-log }}

@@ -41,7 +41,6 @@ jobs:
         with:
           package: "@rotorsoft/${{ matrix.workspace }}"
           directory: "workspace/${{ matrix.workspace }}"
-          git-url: "${{ github.server_url }}/${{ github.repository }}"
 
       - name: release ${{ matrix.workspace }}
         uses: rotorsoft/semrel-release@v1
@@ -53,7 +52,6 @@ jobs:
           email: "rotorsoft@outlook.com"
           package: "@rotorsoft/${{ matrix.workspace }}"
           directory: "workspace/${{ matrix.workspace }}"
-          git-url: "${{ github.server_url }}/${{ github.repository }}"
           tag: ${{ steps.analyze.outputs.next-tag }}"
           version: ${{ steps.analyze.outputs.next-version }}"
           change-log: "${{ steps.analyze.outputs.change-log }}"
