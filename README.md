@@ -46,13 +46,13 @@ jobs:
         uses: rotorsoft/semrel-release@v1
         with:
           npm-registry: "registry.npmjs.org"
-          npm-token: ${{ secrets.NPM_TOKEN }}
+          npm-token: "${{ secrets.NPM_TOKEN }}"
           npm-access: "public"
           user: "rotorsoft"
           email: "rotorsoft@outlook.com"
           package: "@rotorsoft/${{ matrix.workspace }}"
           directory: "workspace/${{ matrix.workspace }}"
-          tag: ${{ steps.analyze.outputs.next-tag }}"
-          version: ${{ steps.analyze.outputs.next-version }}"
+          tag: "${{ steps.analyze.outputs.next-tag }}"
+          version: "${{ steps.analyze.outputs.next-version }}"
           change-log: "${{ steps.analyze.outputs.change-log }}"
 ```

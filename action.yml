@@ -41,19 +41,19 @@ runs:
       id: release
       shell: bash
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         GITHUB_URL: "${{ github.server_url }}/${{ github.repository }}"
         GITHUB_REPO: "${{ github.repository }}"
-        NPM_REGISTRY: ${{ inputs.npm-registry }}
-        NPM_TOKEN: ${{ inputs.npm-token }}
-        NPM_ACCESS: ${{ inputs.npm-access }}
-        USER: ${{ inputs.user }}
-        EMAIL: ${{ inputs.email }}
-        PACKAGE: ${{ inputs.package }}
-        DIRECTORY: ${{ inputs.directory }}
-        TAG: ${{ inputs.tag }}
-        VERSION: ${{ inputs.version }}
-        CHANGE_LOG: ${{ inputs.change-log }}
+        NPM_REGISTRY: "${{ inputs.npm-registry }}"
+        NPM_TOKEN: "${{ inputs.npm-token }}"
+        NPM_ACCESS: "${{ inputs.npm-access }}"
+        USER: "${{ inputs.user }}"
+        EMAIL: "${{ inputs.email }}"
+        PACKAGE: "${{ inputs.package }}"
+        DIRECTORY: "${{ inputs.directory }}"
+        TAG: "${{ inputs.tag }}"
+        VERSION: "${{ inputs.version }}"
+        CHANGE_LOG: "${{ inputs.change-log }}"
 
       if: startsWith(${{ inputs.package }}, ${{ inputs.tag }})
       run: |
