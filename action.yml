@@ -1,0 +1,101 @@
+name: "semrel-release"
+description: "Releases workspace to github and npm registry"
+
+inputs:
+  npm-registry:
+    description: "The name of the npm registry to publish to (optional)"
+    required: false
+  npm-token:
+    description: "The npm token used to authenticate with the npm registry"
+    required: false
+    default: ""
+  npm-access:
+    description: "The npm access option [--access <public|restricted>]"
+    required: false
+    default: "restricted"
+  user:
+    description: "The name of the git user releasing this package"
+    required: true
+  email:
+    description: "The email of the git user releasing this package"
+    required: true
+  package:
+    description: "The name of the package in the mono-repo (git repo)"
+    required: true
+  directory:
+    description: "The path to the package.json in the mono-repo (e.g. libs/eventually)"
+    required: true
+  git-url:
+    description: "The url to the git repo"
+    required: true
+  tag:
+    description: "Version tag formatted as <package>-v<semver>"
+    required: true
+  version:
+    description: "Semantic version"
+    required: true
+  change-log:
+    description: "Log of conventional commits in this release (.md format)"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: release ${{ inputs.package }}
+      id: release
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_REGISTRY: ${{ inputs.npm-registry }}
+        NPM_TOKEN: ${{ inputs.npm-token }}
+        NPM_ACCESS: ${{ inputs.npm-access }}
+        USER: ${{ inputs.user }}
+        EMAIL: ${{ inputs.email }}
+        PACKAGE: ${{ inputs.package }}
+        DIRECTORY: ${{ inputs.directory }}
+        GITURL: ${{ inputs.git-url }}
+        TAG: ${{ inputs.tag }}
+        VERSION: ${{ inputs.version }}
+        CHANGE_LOG: ${{ inputs.change-log }}
+
+      if: startsWith(${{ inputs.package }}, ${{ inputs.tag }})
+      run: |
+        echo ">>> installing..."
+        yarn install
+
+        echo ">>> building..."
+        yarn "${DIRECTORY}" build
+
+        echo ">>> changelog..."
+        msg="chore(release): ${TAG}"
+        notes=$(echo "${CHANGE_LOG}" | awk '{gsub(/\\n/,"\n")}1')
+        echo "${notes}"$'\n'"$(cat ./CHANGELOG.md)" > ./CHANGELOG.md
+
+        echo ">>> bumping..."
+        npm --prefix "${DIRECTORY}" --no-git-tag-version version "${VERSION}"
+
+        echo ">>> committing..."
+        git config user.name "${USER}"
+        git config user.email "${EMAIL}"
+        git remote set-url origin "${GITURL}.git"
+        git add -A .
+        HUSKY=0 git commit -am "${msg}"
+
+        echo ">>> pushing..."
+        git tag -a ${TAG} HEAD -m "${msg}"
+        HUSKY=0 git push --follow-tags origin HEAD:refs/heads/master
+
+        echo ">>> releasing..."
+        data=$(jq -n \
+          --arg tag "${TAG}" \
+          --arg notes "${notes}" \
+          '{name: $tag, tag_name: $tag, body: $notes}')
+        curl -u ${USER}:${GITHUB_TOKEN} -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${REPO}/releases -d "${data}"
+
+        if [[ ! -z "${NPM_REGISTRY}" ]]; then
+          echo ">>> publishing..."
+          echo "//${NPM_REGISTRY}/:_authToken=${NPM_TOKEN}" >> .npmrc
+          npm config set registry "https://${NPM_REGISTRY}"
+          yarn "${DIRECTORY}" npm publish --access "${NPM_ACCESS}"
+        fi
+
+        echo "🚀 ${TAG} released succesfully! 🚀"
