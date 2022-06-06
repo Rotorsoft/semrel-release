@@ -58,8 +58,12 @@ runs:
         VERSION: "${{ inputs.version }}"
         CHANGE_LOG: "${{ inputs.change-log }}"
 
-      if: startsWith(${{ inputs.package }}, ${{ inputs.tag }})
       run: |
+        if [[ "${TAG}" != "${PACKAGE}-v${VERSION}" ]]; then
+          echo "⏏ Invalid semrel tag: ${TAG} ⏏";
+          exit 0;
+        fi
+
         echo ">>> installing..."
         yarn install
 
