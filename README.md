@@ -45,6 +45,7 @@ jobs:
       - name: release ${{ matrix.workspace }}
         uses: rotorsoft/semrel-release@v1
         with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
           npm-registry: "registry.npmjs.org"
           npm-token: "${{ secrets.NPM_TOKEN }}"
           npm-access: "public"

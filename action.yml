@@ -2,6 +2,9 @@ name: "semrel-release"
 description: "Releases workspace to github and npm registry"
 
 inputs:
+  github-token:
+    description: "The secrets.GITHUB_TOKEN from the calling action"
+    required: true
   npm-registry:
     description: "The name of the npm registry to publish to (optional)"
     required: false
@@ -41,7 +44,7 @@ runs:
       id: release
       shell: bash
       env:
-        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        GITHUB_TOKEN: "${{ inputs.github-token }}"
         GITHUB_URL: "${{ github.server_url }}/${{ github.repository }}"
         GITHUB_REPO: "${{ github.repository }}"
         NPM_REGISTRY: "${{ inputs.npm-registry }}"
