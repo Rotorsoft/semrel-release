@@ -42,7 +42,8 @@ runs:
       shell: bash
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITURL: "${{ github.server_url }}/${{ github.repository }}"
+        GITHUB_URL: "${{ github.server_url }}/${{ github.repository }}"
+        GITHUB_REPO: "${{ github.repository }}"
         NPM_REGISTRY: ${{ inputs.npm-registry }}
         NPM_TOKEN: ${{ inputs.npm-token }}
         NPM_ACCESS: ${{ inputs.npm-access }}
@@ -73,7 +74,7 @@ runs:
         echo ">>> committing..."
         git config user.name "${USER}"
         git config user.email "${EMAIL}"
-        git remote set-url origin "${GITURL}.git"
+        git remote set-url origin "${GITHUB_URL}.git"
         git add -A .
         HUSKY=0 git commit -am "${msg}"
 
@@ -86,7 +87,7 @@ runs:
           --arg tag "${TAG}" \
           --arg notes "${notes}" \
           '{name: $tag, tag_name: $tag, body: $notes}')
-        curl -u ${USER}:${GITHUB_TOKEN} -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${REPO}/releases -d "${data}"
+        curl -u ${USER}:${GITHUB_TOKEN} -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/${GITHUB_REPO}/releases -d "${data}"
 
         if [[ ! -z "${NPM_REGISTRY}" ]]; then
           echo ">>> publishing..."
