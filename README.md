@@ -19,6 +19,7 @@ jobs:
   cd:
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 1 # to avoid git conflicts
       matrix:
         workspace:
           - lib1
