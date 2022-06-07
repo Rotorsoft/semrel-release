@@ -64,6 +64,12 @@ runs:
           exit 0;
         fi
 
+        echo ">>> pulling..."
+        git config user.name "${USER}"
+        git config user.email "${EMAIL}"
+        git remote set-url origin "${GITHUB_URL}.git"
+        git pull
+
         echo ">>> installing..."
         yarn install
 
@@ -79,9 +85,6 @@ runs:
         npm --prefix "${DIRECTORY}" --no-git-tag-version version "${VERSION}"
 
         echo ">>> committing..."
-        git config user.name "${USER}"
-        git config user.email "${EMAIL}"
-        git remote set-url origin "${GITHUB_URL}.git"
         git add -A .
         HUSKY=0 git commit -am "${msg}"
 
