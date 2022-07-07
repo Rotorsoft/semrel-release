@@ -58,3 +58,7 @@ jobs:
           version: "${{ steps.analyze.outputs.next-version }}"
           change-log: "${{ steps.analyze.outputs.change-log }}"
 ```
+
+### Change Log
+
+- v2: adding GITHUB_REF when pulling and pushing changes
