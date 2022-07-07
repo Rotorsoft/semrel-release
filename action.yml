@@ -90,7 +90,7 @@ runs:
 
         echo ">>> pushing..."
         git tag -a ${TAG} HEAD -m "${msg}"
-        HUSKY=0 git push --follow-tags origin "HEAD:refs/heads/${GITHUB_REF}"
+        HUSKY=0 git push --follow-tags origin "${GITHUB_REF}"
 
         echo ">>> releasing..."
         data=$(jq -n \
