@@ -71,10 +71,10 @@ runs:
         git pull origin "${GITHUB_REF}"
 
         echo ">>> installing..."
-        yarn install
+        pnpm install --frozen-lockfile
 
         echo ">>> building..."
-        yarn "${DIRECTORY}" build
+        pnpm -F "${DIRECTORY}" build
 
         echo ">>> changelog..."
         msg="chore(release): ${TAG}"
@@ -103,7 +103,7 @@ runs:
           echo ">>> publishing..."
           echo "//${NPM_REGISTRY}/:_authToken=${NPM_TOKEN}" >> .npmrc
           npm config set registry "https://${NPM_REGISTRY}"
-          yarn "${DIRECTORY}" npm publish --access "${NPM_ACCESS}"
+          pnpm -F "${DIRECTORY}" npm publish --access "${NPM_ACCESS}"
         fi
 
         echo "🚀 ${TAG} released succesfully! 🚀"
