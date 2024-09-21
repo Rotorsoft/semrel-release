@@ -74,7 +74,7 @@ runs:
         pnpm install --frozen-lockfile
 
         echo ">>> building..."
-        pnpm -F "${DIRECTORY}" build
+        pnpm -F "${PACKAGE}" build
 
         echo ">>> changelog..."
         msg="chore(release): ${TAG}"
@@ -103,7 +103,8 @@ runs:
           echo ">>> publishing..."
           echo "//${NPM_REGISTRY}/:_authToken=${NPM_TOKEN}" >> .npmrc
           npm config set registry "https://${NPM_REGISTRY}"
-          pnpm -F "${DIRECTORY}" npm publish --access "${NPM_ACCESS}"
+          cd "${DIRECTORY}"
+          npm publish --access "${NPM_ACCESS}"
         fi
 
         echo "🚀 ${TAG} released succesfully! 🚀"

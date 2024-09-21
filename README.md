@@ -62,3 +62,11 @@ jobs:
 ### Change Log
 
 - v2: adding GITHUB_REF when pulling and pushing changes
+- v3.0.0: adding pnpm support
+
+### Tagging releases
+
+```bash
+git tag -a v1.1.0 -m "Release v1.1.0"
+git push origin v1.1.0
+```
