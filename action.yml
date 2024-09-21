@@ -57,6 +57,7 @@ runs:
         TAG: "${{ inputs.tag }}"
         VERSION: "${{ inputs.version }}"
         CHANGE_LOG: "${{ inputs.change-log }}"
+        NODE_AUTH_TOKEN: ${{ inputs.npm-token }}
 
       run: |
         if [[ "${TAG}" != "${PACKAGE}-v${VERSION}" ]]; then
@@ -104,7 +105,9 @@ runs:
           echo "//${NPM_REGISTRY}/:_authToken=${NPM_TOKEN}" >> .npmrc
           npm config set registry "https://${NPM_REGISTRY}"
           cd "${DIRECTORY}"
-          npm publish --access "${NPM_ACCESS}"
+          pnpm publish --access "${NPM_ACCESS}"
         fi
 
         echo "🚀 ${TAG} released succesfully! 🚀"
+
+
